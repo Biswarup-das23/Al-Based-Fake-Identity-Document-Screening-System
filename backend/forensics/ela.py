@@ -53,7 +53,7 @@ def perform_ela(image_pil: Image.Image, quality: int = 90, scale: int = 25) -> T
     # High local variance indicates digital manipulation/splicing
     # Threshold for finding high-error clusters
     thresh_val = min(240, max(60, mean_error + 2.0 * std_error))
-    _, mask = cv2.threshold(gray_ela, int(thresh_val), 255, cv2.THRESH_BINARY)
+    _, mask = cv2.threshold(gray_ela, thresh_val, 255, cv2.THRESH_BINARY)
     
     # Morphological cleanup
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
@@ -76,11 +76,11 @@ def perform_ela(image_pil: Image.Image, quality: int = 90, scale: int = 25) -> T
             # Local error score within bounding box
             roi_error = np.mean(gray_ela[y:y+bh, x:x+bw])
             suspicious_bboxes.append({
-                "x": int(x),
-                "y": int(y),
-                "width": int(bw),
-                "height": int(bh),
-                "area": float(area),
+                "x": x,
+                "y": y,
+                "width": bw,
+                "height": bh,
+                "area": area,
                 "local_intensity": float(roi_error),
                 "type": "Compression Anomaly / Spliced Region"
             })
@@ -90,7 +90,7 @@ def perform_ela(image_pil: Image.Image, quality: int = 90, scale: int = 25) -> T
     # Spliced images have distinct bright high-error patches
     score = min(100.0, (area_ratio * 4.5) + (std_error * 0.8) + (len(suspicious_bboxes) * 3.5))
     
-    return ela_np, float(score), suspicious_bboxes
+    return ela_np, score, suspicious_bboxes
 
 def generate_heatmap_overlay(original_np: np.ndarray, ela_np: np.ndarray) -> np.ndarray:
     """Generate color jet heatmap overlaid onto original image"""

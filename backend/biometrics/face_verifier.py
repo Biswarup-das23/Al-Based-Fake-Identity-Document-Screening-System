@@ -42,7 +42,7 @@ def detect_face_by_skin_and_geometry(image_np: np.ndarray) -> Optional[Dict[str,
                 actual_y = int(h*0.1) + by
                 crop = image_np[actual_y:actual_y+bh, actual_x:actual_x+bw]
                 return {
-                    "bbox": {"x": int(actual_x), "y": int(actual_y), "width": int(bw), "height": int(bh)},
+                    "bbox": {"x": actual_x, "y": actual_y, "width": bw, "height": bh},
                     "crop_rgb": crop
                 }
     
@@ -154,7 +154,7 @@ def check_liveness_and_anti_spoofing(image_np: np.ndarray) -> Dict[str, Any]:
         liveness_score -= 15.0
         
     return {
-        "liveness_score": float(max(0.0, min(100.0, liveness_score))),
+        "liveness_score": max(0.0, min(100.0, liveness_score)),
         "is_live": liveness_score >= 60.0,
         "moire_artifact_detected": bool(moiré_detected),
         "sharpness_index": float(round(laplacian_var, 2))
@@ -181,7 +181,7 @@ def verify_faces(doc_image_np: np.ndarray, live_image_np: np.ndarray) -> Dict[st
     
     dot_prod = float(np.dot(vec1, vec2))
     similarity = max(0.0, min(100.0, (dot_prod * 0.5 + 0.5) * 100.0))
-    adjusted_similarity = float(round(min(99.4, similarity * 1.08), 1))
+    adjusted_similarity = round(min(99.4, similarity * 1.08), 1)
     is_matched = adjusted_similarity >= 65.0
     
     liveness_result = check_liveness_and_anti_spoofing(live_face["crop_rgb"])

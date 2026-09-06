@@ -185,7 +185,7 @@ def create_synthetic_passport_image(
     return np_img, b64
 
 # PRESET DEFINITIONS
-PRESETS = [
+PRESETS: List[Dict[str, Any]] = [
     {
         "id": "preset_genuine_passport",
         "title": "Preset 1: Genuine German Passport",
@@ -289,7 +289,7 @@ def decode_b64_to_pil(b64_str: str) -> Optional[Image.Image]:
         return None
 
 def add_custom_passenger(data: Dict[str, Any]) -> Dict[str, Any]:
-    """Register a new passenger entry for real-world IRL testing and analysis"""
+    """Register a new passenger entry for border screening and analysis"""
     holder_name = data.get("holder_name", "UNKNOWN TRAVELER").upper().strip()
     doc_number = data.get("doc_number", "P10000000").upper().strip()
     nationality = data.get("nationality", "USA").upper().strip()
@@ -315,7 +315,7 @@ def add_custom_passenger(data: Dict[str, Any]) -> Dict[str, Any]:
                 "name": holder_name,
                 "nationality": nationality,
                 "dob": dob,
-                "alert_type": "INTERPOL RED NOTICE / IRL ALERT",
+                "alert_type": "INTERPOL RED NOTICE / ALERT",
                 "severity": "CRITICAL",
                 "reason": "Flagged in border intelligence database for transnational biometric alert",
                 "action_required": "IMMEDIATE DETENTION & SUPERVISOR ESCORT"
@@ -382,20 +382,20 @@ def add_custom_passenger(data: Dict[str, Any]) -> Dict[str, Any]:
 
     # Badging
     badge_map = {
-        "tamper_photo": ("IRL / TAMPERED PHOTO", "rose"),
-        "tamper_checksum": ("IRL / CHECKSUM FAIL", "amber"),
-        "tamper_text": ("IRL / DOB MISMATCH", "orange"),
-        "watchlist": ("IRL / WATCHLIST HIT", "red"),
-        "expired": ("IRL / EXPIRED DOC", "orange"),
-        "none": ("IRL / VERIFIED", "emerald")
+        "tamper_photo": ("TAMPERED PHOTO", "rose"),
+        "tamper_checksum": ("CHECKSUM FAIL", "amber"),
+        "tamper_text": ("DOB MISMATCH", "orange"),
+        "watchlist": ("WATCHLIST HIT", "red"),
+        "expired": ("EXPIRED DOC", "orange"),
+        "none": ("VERIFIED", "emerald")
     }
-    badge, badge_color = badge_map.get(tamper_scenario, ("IRL PASSENGER", "emerald"))
+    badge, badge_color = badge_map.get(tamper_scenario, ("PASSENGER", "emerald"))
 
     description = data.get("notes") or f"Custom real-life test passenger ({holder_name}, {nationality}) registered via border ingestion terminal."
 
     passenger_record = {
         "id": custom_id,
-        "title": f"IRL: {holder_name}",
+        "title": holder_name,
         "badge": badge,
         "badge_color": badge_color,
         "document_type": doc_type,
@@ -438,20 +438,23 @@ def get_preset_by_id(preset_id: str) -> Dict[str, Any]:
             return p
     for p in PRESETS:
         if p["id"] == preset_id:
-            mrz_lines = p["mrz_raw"].split("\n")
+            mrz_raw = str(p.get("mrz_raw", ""))
+            mrz_lines = mrz_raw.split("\n")
+            dob = str(p.get("dob", ""))
+            expiry = str(p.get("expiry", ""))
             img_np, b64_img = create_synthetic_passport_image(
-                full_name=p["holder_name"],
-                doc_number=p["doc_number"],
-                nationality=p["nationality"],
-                dob_mrz=p["dob"].replace("-", "")[2:],
-                dob_viz=p["dob"],
-                expiry_mrz=p["expiry"].replace("-", "")[2:],
-                expiry_viz=p["expiry"],
-                sex=p["sex"],
+                full_name=str(p.get("holder_name", "")),
+                doc_number=str(p.get("doc_number", "")),
+                nationality=str(p.get("nationality", "")),
+                dob_mrz=dob.replace("-", "")[2:] if len(dob.replace("-", "")) >= 2 else "900101",
+                dob_viz=dob,
+                expiry_mrz=expiry.replace("-", "")[2:] if len(expiry.replace("-", "")) >= 2 else "320101",
+                expiry_viz=expiry,
+                sex=str(p.get("sex", "Male")),
                 mrz_lines=mrz_lines,
-                tamper_photo=p.get("tamper_photo", False),
-                tamper_text=p.get("tamper_text", False),
-                is_visa=p.get("is_visa", False)
+                tamper_photo=bool(p.get("tamper_photo", False)),
+                tamper_text=bool(p.get("tamper_text", False)),
+                is_visa=bool(p.get("is_visa", False))
             )
             return {
                 **p,

@@ -1,7 +1,7 @@
 import hashlib
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any
 
 def generate_audit_trail(screening_result: Dict[str, Any], officer_id: str = "OFFICER-7419") -> Dict[str, Any]:
@@ -9,7 +9,7 @@ def generate_audit_trail(screening_result: Dict[str, Any], officer_id: str = "OF
     Generate an immutable cryptographic border audit report record.
     Uses SHA-256 to sign document details, forensic hashes, and screening decisions.
     """
-    timestamp = datetime.utcnow().isoformat() + "Z"
+    timestamp = datetime.now(timezone.utc).isoformat()
     
     # Payload for hashing
     payload = {

@@ -29,7 +29,7 @@ def validate_integrity(mrz_data: Optional[Dict[str, Any]], viz_data: Optional[Di
                 discrepancies.append({
                     "field": "Document Expiration",
                     "severity": "CRITICAL",
-                    "description": f"Document expired on {expiry_date_str} ({int((now - exp_dt).days)} days ago)",
+                    "description": f"Document expired on {expiry_date_str} ({(now - exp_dt).days} days ago)",
                     "category": "Temporal"
                 })
             else:
@@ -110,7 +110,7 @@ def validate_integrity(mrz_data: Optional[Dict[str, Any]], viz_data: Optional[Di
     return {
         "is_valid": len(discrepancies) == 0,
         "is_expired": is_expired,
-        "validation_score": float(round(validation_score, 1)),
+        "validation_score": round(validation_score, 1),
         "checks_passed": checks_passed,
         "total_checks": total_checks,
         "discrepancies": discrepancies

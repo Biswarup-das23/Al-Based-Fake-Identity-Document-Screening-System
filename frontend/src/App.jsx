@@ -258,7 +258,7 @@ export default function App() {
 
       </div>
 
-      {/* New Passenger Registration Modal for IRL Testing */}
+      {/* New Passenger Registration Modal */}
       <NewPassengerModal
         isOpen={isNewPassengerModalOpen}
         onClose={() => setIsNewPassengerModalOpen(false)}

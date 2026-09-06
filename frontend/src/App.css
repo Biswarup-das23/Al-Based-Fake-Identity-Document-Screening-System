@@ -1,5 +1,5 @@
 /* AegisBorder AI — App-level overrides */
-
+button {
   color: var(--accent);
   background: var(--accent-bg);
   border: 2px solid transparent;

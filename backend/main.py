@@ -117,7 +117,7 @@ def load_preset_details(preset_id: str):
 @app.post("/api/passengers/new")
 def register_new_passenger(req: NewPassengerRequest):
     """
-    Register a new passenger for real-world IRL testing and analysis,
+    Register a new passenger for border screening and analysis,
     then automatically execute the full 4-module forensic screening.
     """
     new_preset = add_custom_passenger(req.model_dump())

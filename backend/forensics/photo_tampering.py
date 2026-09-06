@@ -88,10 +88,10 @@ def detect_photo_replacement(image_np: np.ndarray, face_bbox: Optional[Dict[str,
     edge_color_rgb = cv2.cvtColor(edge_color, cv2.COLOR_BGR2RGB)
     
     return {
-        "photo_tamper_score": float(photo_tamper_score),
-        "is_photo_tampered": bool(photo_tamper_score > 60.0),
-        "avg_border_gradient": float(avg_border_gradient),
-        "color_divergence": float(color_divergence),
+        "photo_tamper_score": photo_tamper_score,
+        "is_photo_tampered": photo_tamper_score > 60.0,
+        "avg_border_gradient": avg_border_gradient,
+        "color_divergence": color_divergence,
         "portrait_bbox": {"x": x, "y": y, "width": bw, "height": bh},
         "edge_map_rgb": edge_color_rgb
     }

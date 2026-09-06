@@ -117,7 +117,7 @@ def calculate_risk_score(
     elif any(d.get("severity") == "HIGH" for d in validation_data.get("discrepancies", [])):
         composite = max(composite, 48.0)
 
-    final_score = float(round(min(100.0, max(2.0, composite)), 1))
+    final_score = round(min(100.0, max(2.0, composite)), 1)
     
     # Decision Matrix
     if final_score < 25.0:

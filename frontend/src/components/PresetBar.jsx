@@ -62,10 +62,10 @@ export default function PresetBar({
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Passenger Screening Profiles &amp; Test Cases
+              Passenger Screening Profiles
             </h2>
             <p className="text-[11px] text-slate-400 font-mono">
-              Select verification profiles or register real-world passengers for IRL document &amp; biometric analysis
+              Select a screening profile or register a new passenger for AI document &amp; biometric analysis
             </p>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function PresetBar({
         >
           <div className="flex items-start justify-between gap-2 mb-2.5">
             <span className="text-[9px] font-mono px-2 py-0.5 rounded-full font-bold uppercase border bg-cyan-500/15 text-cyan-300 border-cyan-400/30 flex items-center gap-1">
-              <Plus className="w-2.5 h-2.5" /> IRL ENTRY
+              <Plus className="w-2.5 h-2.5" /> NEW ENTRY
             </span>
             <UserPlus className="w-4 h-4 text-cyan-400 group-hover:scale-110 group-hover:rotate-6 transition-transform" />
           </div>
@@ -144,7 +144,7 @@ export default function PresetBar({
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2.5">
                   <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full font-bold uppercase border line-clamp-1 ${colors.badge}`}>
-                    {isCustom ? (p.badge || 'IRL PASSENGER') : meta.label}
+                    {isCustom ? (p.badge || 'PASSENGER') : meta.label}
                   </span>
                   <div className="flex items-center gap-1 shrink-0">
                     {isCustom && onDeletePassenger && (

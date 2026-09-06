@@ -44,7 +44,7 @@ def locate_mrz_region(cv_image: np.ndarray) -> Tuple[Optional[np.ndarray], Dict[
 
 def extract_viz_fields_from_metadata(extracted_text: str, document_type: str = "Passport") -> Dict[str, Any]:
     """Parse Visual Inspection Zone (VIZ) textual representation"""
-    viz_data = {
+    viz_data: Dict[str, Any] = {
         "full_name": None,
         "document_number": None,
         "nationality": None,

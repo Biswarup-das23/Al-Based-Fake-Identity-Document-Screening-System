@@ -20,7 +20,7 @@
   - [Module 3: Biometric Face Verification & Anti-Spoofing](#module-3-biometric-face-verification--anti-spoofing)
   - [Module 4: Border Watchlist & Interpol Red Notice Screening](#module-4-border-watchlist--interpol-red-notice-screening)
   - [Unified Risk Decision Engine](#unified-risk-decision-engine)
-- [Real-World (IRL) Testing & New Passenger Console](#real-world-irl-testing--new-passenger-console)
+- [New Passenger Registration Console](#new-passenger-registration-console)
 - [Tech Stack](#tech-stack)
 - [Project Directory Structure](#project-directory-structure)
 - [Quick Start & Installation](#quick-start--installation)
@@ -124,14 +124,15 @@ Generates an aggregated risk score (0–100%) and categorizes the traveler into 
 
 ---
 
-## Real-World (IRL) Testing & New Passenger Console
+## New Passenger Registration Console
 
-A dedicated **"New Passenger"** registration console enables real-world terminal trials and demonstration scenarios:
-1. **Custom Document Ingestion**: Upload physical document images or photos taken at the counter.
-2. **Live Webcam Facial Ingestion**: Snap live traveler selfies using a connected webcam or sensor for real-time 1:1 facial biometric matching.
-3. **Automated ICAO MRZ Synthesis**: Automatically calculates valid ICAO check digits for any entered identity metadata.
-4. **Fraud Scenario Injection**: Choose from test scenarios including *Photo Tampering*, *Checksum Forgery*, *DOB Mismatch*, *Interpol Red Notice*, or *Authentic Document*.
-5. **Quick Templates**: One-click profiles to rapidly test edge cases (`Diplomat`, `Counterfeit Visa`, `Fugitive Watchlist`, `Photo Altered`).
+A dedicated **"+ New Entry"** button on the screening dashboard opens a smooth 3-step registration wizard:
+
+1. **Step 1 — Identity**: Enter the passenger's full legal name (surname-first), date of birth, gender/sex, and nationality. Quick-select chips cover the 12 most common ICAO country codes.
+2. **Step 2 — Document**: Choose document type (Passport TD3 / Visa TD2 / National ID), enter the document number and expiry date, optionally upload a physical document scan (auto-synthesises a compliant ICAO image if skipped), and add case notes.
+3. **Step 3 — Biometrics**: Capture a passenger photo via webcam or upload a portrait — used for 1:1 facial biometric matching. Biometric verification is gracefully skipped if no photo is provided.
+
+Upon submission the system auto-generates valid ICAO 9303 MRZ check digits, synthesises a document image, and immediately runs the full 4-module AI screening pipeline, with results appearing in the dashboard within seconds.
 
 ---
 
@@ -194,7 +195,7 @@ A dedicated **"New Passenger"** registration console enables real-world terminal
             ├── Header.jsx         # Live clock, scan counters, defense status
             ├── PresetBar.jsx      # Threat presets & + New Passenger trigger
             ├── DocumentIngestion.jsx # Dual-channel document & webcam camera feed
-            ├── NewPassengerModal.jsx # IRL passenger registration & test console
+            ├── NewPassengerModal.jsx # 3-step passenger registration wizard
             ├── MRZTerminal.jsx    # Monospace terminal for ICAO checksum audit
             ├── ForensicViewer.jsx # ELA heatmap, noise map & edge gradient studio
             ├── BiometricsPanel.jsx# Live camera vs portrait 1:1 face matching
@@ -261,7 +262,7 @@ Frontend dashboard will be running at:
 | `GET` | `/api/presets` | List all threat simulation profiles + custom registered passengers |
 | `GET` | `/api/presets/{id}` | Load document image, MRZ, and metadata for a specific preset |
 | `POST` | `/api/screen-document` | Execute full 4-module forensic screening & return risk assessment |
-| `POST` | `/api/passengers/new` | Register new IRL passenger, auto-generate MRZ/document, and run screening |
+| `POST` | `/api/passengers/new` | Register new passenger, auto-generate ICAO MRZ/document image, and run full screening |
 | `DELETE`| `/api/passengers/{id}` | Remove custom passenger from session |
 
 ---

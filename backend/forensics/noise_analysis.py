@@ -56,10 +56,10 @@ def analyze_noise_inconsistency(image_np: np.ndarray, block_size: int = 32) -> T
                 x = c * block_size
                 y = r * block_size
                 anomaly_blocks.append({
-                    "x": int(x),
-                    "y": int(y),
-                    "width": int(block_size),
-                    "height": int(block_size),
+                    "x": x,
+                    "y": y,
+                    "width": block_size,
+                    "height": block_size,
                     "deviation": float(abs(val - median_noise)),
                     "type": "Sensor Noise Variance Mismatch"
                 })
@@ -67,4 +67,4 @@ def analyze_noise_inconsistency(image_np: np.ndarray, block_size: int = 32) -> T
     # Anomaly score based on standard deviation of block variances
     noise_discrepancy_score = min(100.0, (len(anomaly_blocks) / (grid_h * grid_w + 1)) * 300.0 + (std_noise / (mean_noise + 1e-4) * 20.0))
     
-    return noise_visual_rgb, float(noise_discrepancy_score), anomaly_blocks
+    return noise_visual_rgb, noise_discrepancy_score, anomaly_blocks
